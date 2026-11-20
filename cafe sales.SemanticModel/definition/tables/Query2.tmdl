@@ -1,0 +1,41 @@
+table Query2
+	lineageTag: 7fd69e93-12fc-43ba-b88b-8df27615e0ce
+
+	column Check
+		dataType: string
+		lineageTag: ab5088e8-bd0d-42a7-9f8e-a8bd920a151f
+		summarizeBy: none
+		sourceColumn: Check
+
+		annotation SummarizationSetBy = Automatic
+
+	column Value
+		dataType: string
+		lineageTag: 409dca24-d859-4f17-9e65-22d5c821fa0b
+		summarizeBy: none
+		sourceColumn: Value
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Query2 = m
+		mode: import
+		source =
+				let
+				   Source = #table(
+				       {"Check", "Value"},
+				       {
+				           {"Sales rows", Table.RowCount(Sales)},
+				           {"Distinct Transaction IDs", List.Count(List.Distinct(Sales[Transaction ID]))},
+				           {"Unknown product rows", Table.RowCount(Table.SelectRows(Sales, each [Product Code] = "UNK"))},
+				           {"Rows with no Location ID", Table.RowCount(Table.SelectRows(Sales, each [Location ID] = null))},
+				           {"Total quantity", List.Sum(Sales[Quantity])},
+				           {"Total revenue", Number.Round(List.Sum(Sales[Revenue]), 2)}
+				       }
+				   )
+				in
+				   Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

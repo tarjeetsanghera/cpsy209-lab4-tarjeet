@@ -1,0 +1,76 @@
+table Orders
+	lineageTag: f3e0f285-a4ed-4359-96b3-0f44f603f372
+
+	column 'Transaction ID'
+		dataType: string
+		lineageTag: 6310b0e2-b800-47a9-af1f-a600e94755bd
+		summarizeBy: none
+		sourceColumn: Transaction ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Transaction Data'
+		dataType: string
+		lineageTag: dcded43a-ea35-490e-a462-e12146f7eb73
+		summarizeBy: none
+		sourceColumn: Transaction Data
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Product code'
+		dataType: string
+		lineageTag: e4f0a917-1db5-4f2b-948f-7aa1588686ca
+		summarizeBy: none
+		sourceColumn: Product code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: 6e62c5d0-0598-4ba0-97ff-26565f2471f5
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Unit Price'
+		dataType: decimal
+		formatString: \$#,0.###############;-\$#,0.###############;\$#,0.###############
+		lineageTag: 8e3bfa10-fde8-48be-a18e-659fae63cd19
+		summarizeBy: sum
+		sourceColumn: Unit Price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-CA"}
+
+	column 'Location Id'
+		dataType: string
+		lineageTag: 7c0ee21b-1e29-423e-ba9f-883aee015e68
+		summarizeBy: none
+		sourceColumn: Location Id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Orders = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\rajve\Downloads\Lab 2 data (Jul-Dec 2025)\Lab 2 data (Jul-Dec 2025)\Online Orders.xlsx"), null, true),
+				    Orders_Sheet = Source{[Item="Orders",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Orders_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"OrderID", type text}, {"OrderDate", Int64.Type}, {"SKU", type text}, {"Quantity", Int64.Type}, {"Price", type number}, {"Status", type text}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Changed Type",{{"Price", Currency.Type}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type1",{{"SKU", "Product code"}, {"OrderDate", "Transaction Data"}, {"OrderID", "Transaction ID"}}),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Renamed Columns",{{"Transaction Data", type text}, {"Transaction ID", type text}}),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Changed Type2",{{"Price", "Unit Price"}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Renamed Columns1",{"Status"}),
+				    #"Added Custom" = Table.AddColumn(#"Removed Columns", "Location Id", each "web")
+				in
+				    #"Added Custom"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

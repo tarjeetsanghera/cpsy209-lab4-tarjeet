@@ -1,0 +1,81 @@
+table 'Lab 2 data (Jul-Dec 2025)'
+	lineageTag: 56b8be66-1a32-43b2-8d45-4abc74965300
+
+	column Name
+		dataType: string
+		lineageTag: 92d79775-5d6d-418d-b894-133c1c7c2086
+		summarizeBy: none
+		sourceColumn: Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Extension
+		dataType: string
+		lineageTag: 82f06707-da4b-4a63-bb80-e55fb41cd73b
+		summarizeBy: none
+		sourceColumn: Extension
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date accessed'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 9a760dd9-86b0-40de-b1cb-b6e45fe8c852
+		summarizeBy: none
+		sourceColumn: Date accessed
+
+		variation Variation
+			isDefault
+			relationship: cede96eb-156d-4e50-bb2d-a821c953722a
+			defaultHierarchy: LocalDateTable_9edb8502-671d-4a87-8273-c159a407d211.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date modified'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: c5f247c5-3121-46a8-8131-ff6b222fd549
+		summarizeBy: none
+		sourceColumn: Date modified
+
+		variation Variation
+			isDefault
+			relationship: 37c8f435-cf62-4ef8-a728-519275f0fd6e
+			defaultHierarchy: LocalDateTable_d93d8d3a-a041-45e8-bb06-879ee902cee1.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date created'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 7c66fc1b-6c88-4d13-aa9f-02390531aaa2
+		summarizeBy: none
+		sourceColumn: Date created
+
+		variation Variation
+			isDefault
+			relationship: 93cf2926-5b47-4d1c-a58b-52d71a537626
+			defaultHierarchy: LocalDateTable_752f392e-ec9c-49c8-a0af-fce4444b562b.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Folder Path'
+		dataType: string
+		lineageTag: 7c84635f-3f28-4b36-8e86-bab614b56c85
+		summarizeBy: none
+		sourceColumn: Folder Path
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Lab 2 data (Jul-Dec 2025)' = m
+		mode: import
+		source =
+				let
+				    Source = Folder.Files("C:\Users\rajve\Downloads\Lab 2 data (Jul-Dec 2025)")
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

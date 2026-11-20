@@ -1,0 +1,92 @@
+table Products
+	lineageTag: f7197c73-93a1-4d08-b93c-f092d27e608b
+
+	column 'Product Code'
+		dataType: string
+		lineageTag: 2b30416c-1260-4e38-ba11-dd8c0803020b
+		summarizeBy: none
+		sourceColumn: Product Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductName
+		dataType: string
+		lineageTag: 566f6cc0-1107-4061-a8e4-a136e1f532a4
+		summarizeBy: none
+		sourceColumn: ProductName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Category
+		dataType: string
+		lineageTag: 62be5bf7-5102-492c-bae1-7c5587581e8c
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitCost
+		dataType: double
+		lineageTag: 303422b4-0c9f-426b-84a3-a80734dd7040
+		summarizeBy: sum
+		sourceColumn: UnitCost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'unit Price'
+		dataType: decimal
+		formatString: \$#,0.###############;-\$#,0.###############;\$#,0.###############
+		lineageTag: 039a927e-a456-4649-9dff-c05ccd2b9d38
+		summarizeBy: sum
+		sourceColumn: unit Price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-CA"}
+
+	column 'Product Name'
+		dataType: string
+		lineageTag: a3c2878b-33bb-4463-b66a-6280afa0443f
+		summarizeBy: none
+		sourceColumn: Product Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Unit Cost'
+		dataType: int64
+		formatString: 0
+		lineageTag: 8a78ff88-65c0-498a-974a-0067a98a9358
+		summarizeBy: sum
+		sourceColumn: Unit Cost
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'List price '
+		dataType: int64
+		formatString: 0
+		lineageTag: df540c67-90a2-4c31-8623-e6abe527f869
+		summarizeBy: sum
+		sourceColumn: "List price "
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Products = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\rajve\Downloads\Lab 2 data (Jul-Dec 2025)\Lab 2 data (Jul-Dec 2025)\Products.xlsx"), null, true),
+				    Products_Sheet = Source{[Item="Products",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Products_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"ProductCode", type text}, {"ProductName", type text}, {"Category", type text}, {"UnitCost", type number}, {"ListPrice", type number}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"ProductCode", "Product Code"}, {"ListPrice", "unit Price"}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Renamed Columns",{{"unit Price", Currency.Type}, {"ProductName", type text}, {"Product Code", type text}}),
+				    #"Appended Query" = Table.Combine({#"Changed Type1", #"Unknow Product"})
+				in
+				    #"Appended Query"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

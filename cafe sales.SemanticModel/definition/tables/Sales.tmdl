@@ -1,0 +1,95 @@
+table Sales
+	lineageTag: 1475d33b-3dc3-416e-ac66-150bbebf93bb
+
+	column 'Transaction ID'
+		dataType: string
+		lineageTag: 190499ce-edc6-4737-ba76-2e79e61805ae
+		summarizeBy: none
+		sourceColumn: Transaction ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Transaction Data'
+		dataType: string
+		lineageTag: b2ab2771-ac41-41bc-9975-25be2bb71cb3
+		summarizeBy: none
+		sourceColumn: Transaction Data
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductName
+		dataType: string
+		lineageTag: e672c2e1-d0e0-41ff-a507-4cd7ad4eaba0
+		summarizeBy: none
+		sourceColumn: ProductName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: f9eaa9d9-4d20-4ba1-b581-b377f7218a9e
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitPrice
+		dataType: double
+		lineageTag: 39ad2760-4bf5-42f7-92d5-91bbc86b0ea2
+		summarizeBy: sum
+		sourceColumn: UnitPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Location ID'
+		dataType: string
+		lineageTag: 172f3f58-8474-4b29-b1ed-75b92731b94d
+		summarizeBy: none
+		sourceColumn: Location ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'product key'
+		dataType: string
+		lineageTag: 998e1183-30eb-4079-af12-88bdf409f9ee
+		summarizeBy: none
+		sourceColumn: product key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Revenue
+		dataType: decimal
+		formatString: \$#,0.###############;-\$#,0.###############;\$#,0.###############
+		lineageTag: 6357e790-005d-4124-9f9b-78b27a4acb25
+		summarizeBy: sum
+		sourceColumn: Revenue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-CA"}
+
+	partition Sales = m
+		mode: import
+		source =
+				let
+				    Source = Table.Combine({#"cafe sales 2", Locations}),
+				    #"Renamed Columns" = Table.RenameColumns(Source,{{"ProductCode", "Product Code"}}),
+				    #"Trimmed Text" = Table.TransformColumns(#"Renamed Columns",{{"Product Code", Text.Trim, type text}, {"Transaction ID", Text.Trim, type text}}),
+				    #"Capitalized Each Word" = Table.TransformColumns(#"Trimmed Text",{{"Transaction ID", Text.Proper, type text}}),
+				    #"Merged Queries" = Table.NestedJoin(#"Capitalized Each Word", {"Product Code"}, Products, {"Product Code"}, "Products", JoinKind.LeftOuter),
+				    #"Expanded Products" = Table.ExpandTableColumn(#"Merged Queries", "Products", {"Product Code"}, {"Products.Product Code"}),
+				    #"Added Conditional Column" = Table.AddColumn(#"Expanded Products", "product key", each if [Products.Product Code] = null then "UNK" else [Product Code]),
+				    #"Removed Columns" = Table.RemoveColumns(#"Added Conditional Column",{"Products.Product Code", "Product Code", "Channel", "Neighbourhood", "Location Name"}),
+				    #"Added Custom" = Table.AddColumn(#"Removed Columns", "Revenue", each [Quanity] [UnitPrice]),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Added Custom",{{"Quanity", "Quantity"}}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns1",{{"Revenue", Currency.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

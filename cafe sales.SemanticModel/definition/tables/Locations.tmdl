@@ -1,0 +1,52 @@
+table Locations
+	lineageTag: 9468b75c-4f1e-4222-b2fb-2a8b67b61f6f
+
+	column 'Location ID'
+		dataType: string
+		lineageTag: 9f6b6272-ec48-44d8-aadc-bb2e995923b3
+		summarizeBy: none
+		sourceColumn: Location ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Location Name'
+		dataType: string
+		lineageTag: e957e616-068c-4e60-a35e-e9e6c19ad092
+		summarizeBy: none
+		sourceColumn: Location Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Neighbourhood
+		dataType: string
+		lineageTag: b57f95cd-90f5-4775-830a-3d0dc99392f6
+		summarizeBy: none
+		sourceColumn: Neighbourhood
+
+		annotation SummarizationSetBy = Automatic
+
+	column Channel
+		dataType: string
+		lineageTag: 20adc26c-30d9-4ecc-8bb4-2e3f3486ade1
+		summarizeBy: none
+		sourceColumn: Channel
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Locations = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\rajve\Downloads\Lab 2 data (Jul-Dec 2025)\Lab 2 data (Jul-Dec 2025)\Locations.xlsx"), null, true),
+				    Locations_Sheet = Source{[Item="Locations",Kind="Sheet"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(Locations_Sheet,{{"Column1", type text}, {"Column2", type text}, {"Column3", type text}, {"Column4", type text}}),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Changed Type", [PromoteAllScalars=true]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers",{{"LocationID", type text}, {"LocationName", type text}, {"Neighbourhood", type text}, {"Channel", type text}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type1",{{"LocationID", "Location ID"}, {"LocationName", "Location Name"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

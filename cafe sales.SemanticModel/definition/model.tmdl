@@ -1,0 +1,42 @@
+model Model
+	culture: en-CA
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-CA
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup 'Transform File from Cafe Sales (2)'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File from Cafe Sales (2)\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["Lab 2 data (Jul-Dec 2025)","Cafe Sales","cafe sales 2","Sample File","Parameter1","Transform Sample File","Transform File","Locations","Products","Orders","Sales","Check orphan","Unknow Product","Query2"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table 'Lab 2 data (Jul-Dec 2025)'
+ref table DateTableTemplate_d458f924-bea5-4ace-9521-a9f7ef6a1000
+ref table LocalDateTable_9edb8502-671d-4a87-8273-c159a407d211
+ref table LocalDateTable_d93d8d3a-a041-45e8-bb06-879ee902cee1
+ref table LocalDateTable_752f392e-ec9c-49c8-a0af-fce4444b562b
+ref table 'Cafe Sales'
+ref table LocalDateTable_2002d3ff-20bc-4bae-9f3e-9e62c85505e2
+ref table LocalDateTable_1a57d764-60da-4202-9f22-234f39b07cb6
+ref table LocalDateTable_035be030-fedc-42fb-87ad-13d440f0987c
+ref table 'cafe sales 2'
+ref table Locations
+ref table Products
+ref table Orders
+ref table Sales
+ref table 'Unknow Product'
+ref table Query2
+
+ref cultureInfo en-CA
+

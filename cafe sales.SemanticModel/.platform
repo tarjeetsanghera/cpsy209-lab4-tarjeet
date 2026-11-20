@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "cafe sales"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "5a53d366-6d21-4c1a-af6d-1791d6f3a7d0"
+  }
+}

@@ -1,0 +1,61 @@
+relationship cede96eb-156d-4e50-bb2d-a821c953722a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Lab 2 data (Jul-Dec 2025)'.'Date accessed'
+	toColumn: LocalDateTable_9edb8502-671d-4a87-8273-c159a407d211.Date
+
+relationship 37c8f435-cf62-4ef8-a728-519275f0fd6e
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Lab 2 data (Jul-Dec 2025)'.'Date modified'
+	toColumn: LocalDateTable_d93d8d3a-a041-45e8-bb06-879ee902cee1.Date
+
+relationship 93cf2926-5b47-4d1c-a58b-52d71a537626
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Lab 2 data (Jul-Dec 2025)'.'Date created'
+	toColumn: LocalDateTable_752f392e-ec9c-49c8-a0af-fce4444b562b.Date
+
+relationship 513c60d4-7652-47b6-8b5a-8b9c16723c46
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Cafe Sales'.'Date accessed'
+	toColumn: LocalDateTable_2002d3ff-20bc-4bae-9f3e-9e62c85505e2.Date
+
+relationship 544e36dd-ab90-4264-9ae9-5f194e5abba7
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Cafe Sales'.'Date modified'
+	toColumn: LocalDateTable_1a57d764-60da-4202-9f22-234f39b07cb6.Date
+
+relationship 109beaa3-37a9-471e-8ac8-d094beab4f69
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Cafe Sales'.'Date created'
+	toColumn: LocalDateTable_035be030-fedc-42fb-87ad-13d440f0987c.Date
+
+relationship AutoDetected_2578d794-7c44-44e6-a241-2cf5149131f8
+	fromColumn: 'cafe sales 2'.ProductCode
+	toColumn: Products.'Product Code'
+
+relationship AutoDetected_25ceaa66-4461-4956-ad05-617c3421d816
+	fromColumn: Orders.'Product code'
+	toColumn: Products.'Product Code'
+
+relationship AutoDetected_4909ad87-dc52-44d6-8c47-21ae6fb2115a
+	fromColumn: Sales.'Transaction ID'
+	toColumn: 'cafe sales 2'.'Transaction ID'
+
+relationship AutoDetected_464ca667-beb3-497f-a3ea-3a4f6fc02ec4
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'Unknow Product'.'Product Code'
+	toColumn: Products.'Product Code'
+
+relationship AutoDetected_eb52b327-772a-4a8a-83df-684c57c113eb
+	fromColumn: 'cafe sales 2'.'Location ID'
+	toColumn: Locations.'Location ID'
+
+relationship AutoDetected_2a5394e6-e05e-449d-be92-6ffe20349a4f
+	fromColumn: Orders.'Location Id'
+	toColumn: Locations.'Location ID'
+
+relationship AutoDetected_f0efdadd-980d-4940-a42a-e56d04ea58d9
+	isActive: false
+	fromColumn: Sales.'Location ID'
+	toColumn: Locations.'Location ID'
+

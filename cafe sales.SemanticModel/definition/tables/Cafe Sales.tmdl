@@ -1,0 +1,81 @@
+table 'Cafe Sales'
+	lineageTag: f95ff495-7f0a-4ba7-86be-899838f501a9
+
+	column Name
+		dataType: string
+		lineageTag: b95ca3cf-c60e-4fa7-b6b5-32ebc4864529
+		summarizeBy: none
+		sourceColumn: Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Extension
+		dataType: string
+		lineageTag: ec8b6653-b0c5-4a03-b39a-6b638ee04617
+		summarizeBy: none
+		sourceColumn: Extension
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date accessed'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 1a702b3d-5bae-4cf5-822b-2d4b9bc4dc17
+		summarizeBy: none
+		sourceColumn: Date accessed
+
+		variation Variation
+			isDefault
+			relationship: 513c60d4-7652-47b6-8b5a-8b9c16723c46
+			defaultHierarchy: LocalDateTable_2002d3ff-20bc-4bae-9f3e-9e62c85505e2.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date modified'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 648b780d-ef8a-4eb0-915b-15e1d2212b2f
+		summarizeBy: none
+		sourceColumn: Date modified
+
+		variation Variation
+			isDefault
+			relationship: 544e36dd-ab90-4264-9ae9-5f194e5abba7
+			defaultHierarchy: LocalDateTable_1a57d764-60da-4202-9f22-234f39b07cb6.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date created'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 4d7cd2e9-41bc-4939-b444-bb6e4986ca13
+		summarizeBy: none
+		sourceColumn: Date created
+
+		variation Variation
+			isDefault
+			relationship: 109beaa3-37a9-471e-8ac8-d094beab4f69
+			defaultHierarchy: LocalDateTable_035be030-fedc-42fb-87ad-13d440f0987c.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Folder Path'
+		dataType: string
+		lineageTag: d5a1fe8a-fe72-4391-87e1-83c08af6fa00
+		summarizeBy: none
+		sourceColumn: Folder Path
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Cafe Sales' = m
+		mode: import
+		source =
+				let
+				    Source = Folder.Files("C:\Users\rajve\Downloads\Lab 2 data (Jul-Dec 2025)\Lab 2 data (Jul-Dec 2025)\Cafe Sales")
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

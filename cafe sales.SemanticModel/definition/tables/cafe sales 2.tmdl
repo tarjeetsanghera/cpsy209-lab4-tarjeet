@@ -1,0 +1,93 @@
+table 'cafe sales 2'
+	lineageTag: 6c174c7f-8b03-476d-a989-3967dda0261c
+
+	column 'Transaction ID'
+		dataType: string
+		lineageTag: 56b1c176-8aaf-42a2-81e7-f9ad2191d166
+		summarizeBy: none
+		sourceColumn: Transaction ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Transaction Data'
+		dataType: string
+		lineageTag: 6fecfc14-7042-4216-b1e9-55f3569b95d1
+		summarizeBy: none
+		sourceColumn: Transaction Data
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductCode
+		dataType: string
+		lineageTag: 6ff6b760-704e-4634-9102-b8ecc7a9f2c7
+		summarizeBy: none
+		sourceColumn: ProductCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductName
+		dataType: string
+		lineageTag: c5005173-f3ff-42f3-8913-38d88bff3247
+		summarizeBy: none
+		sourceColumn: ProductName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quanity
+		dataType: int64
+		formatString: 0
+		lineageTag: 80db6908-e6c2-4446-b090-5c72ded15005
+		summarizeBy: sum
+		sourceColumn: Quanity
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitPrice
+		dataType: double
+		lineageTag: fc20c06c-6adf-4d1f-a598-7365b3bde014
+		summarizeBy: sum
+		sourceColumn: UnitPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Location ID'
+		dataType: string
+		lineageTag: a51d9946-97a4-4810-9685-f6eb7becfe87
+		summarizeBy: none
+		sourceColumn: Location ID
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'cafe sales 2' = m
+		mode: import
+		source =
+				let
+				    Source = Folder.Files("C:\Users\rajve\Downloads\Lab 2 data (Jul-Dec 2025)\Lab 2 data (Jul-Dec 2025)\Cafe Sales"),
+				    #"Filtered Hidden Files1" = Table.SelectRows(Source, each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File", each #"Transform File"([Content])),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File"}),
+				    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File", Table.ColumnNames(#"Transform File"(#"Sample File"))),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"TxnID", type text}, {"TxnDate", type text}, {"Cafe", type text}, {"ProductCode", type text}, {"ProductName", type text}, {"Qty", Int64.Type}, {"UnitPrice", type number}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"TxnID", "Transaction data"}}),
+				    #"Removed Duplicates" = Table.Distinct(#"Renamed Columns"),
+				    #"Trimmed Text" = Table.TransformColumns(#"Removed Duplicates",{{"Cafe", Text.Trim, type text}}),
+				    #"Capitalized Each Word" = Table.TransformColumns(#"Trimmed Text",{{"Cafe", Text.Proper, type text}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Capitalized Each Word", each ([Cafe] <> "Total")),
+				    #"Renamed Columns2" = Table.RenameColumns(#"Filtered Rows",{{"Transaction data", "Transaction ID"}, {"TxnDate", "Transaction Data"}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Renamed Columns2",{{"ProductCode", type text}}),
+				    #"Uppercased Text" = Table.TransformColumns(#"Changed Type1",{{"ProductCode", Text.Upper, type text}}),
+				    #"Filtered Rows1" = Table.SelectRows(#"Uppercased Text", each true),
+				    #"Renamed Columns3" = Table.RenameColumns(#"Filtered Rows1",{{"Qty", "Quanity"}}),
+				    #"Merged Queries" = Table.NestedJoin(#"Renamed Columns3", {"Cafe"}, Locations, {"Location Name"}, "Locations", JoinKind.LeftOuter),
+				    #"Expanded Locations" = Table.ExpandTableColumn(#"Merged Queries", "Locations", {"Location ID"}, {"Location ID"}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Expanded Locations",{"Cafe", "Source.Name"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
