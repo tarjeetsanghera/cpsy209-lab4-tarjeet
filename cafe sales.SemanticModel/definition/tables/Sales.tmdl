@@ -1,6 +1,12 @@
 table Sales
 	lineageTag: 1475d33b-3dc3-416e-ac66-150bbebf93bb
 
+	measure 'Total Revenue' = SUM(Sales[Revenue])
+		formatString: \$#,0.###############;-\$#,0.###############;\$#,0.###############
+		lineageTag: 11b62bd1-9176-4419-b130-951b58980114
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-CA"}
+
 	column 'Transaction ID'
 		dataType: string
 		lineageTag: 190499ce-edc6-4737-ba76-2e79e61805ae
